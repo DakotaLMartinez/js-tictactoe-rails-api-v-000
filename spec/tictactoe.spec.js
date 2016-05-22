@@ -432,7 +432,7 @@ describe('#integration tests of persistence', function() {
 
   it("if should be able to switch to an old game", function() {
     setFixtures('<body><table border="1" cellpadding="40"><tr><td data-x="0", data-y="0"></td><td data-x="1", data-y="0"></td><td data-x="2", data-y="0"></td></tr><tr><td data-x="0", data-y="1"></td><td data-x="1", data-y="1"></td><td data-x="2", data-y="1"></td></tr><tr><td data-x="0", data-y="2"></td><td data-x="1", data-y="2"></td><td data-x="2", data-y="2"></td></tr></table><div id="games"></div><div id="message"></div><button id="save">Save Game</button><button id="previous">Show Previous Games</button></body>');
-    attachListeners()
+    attachListeners();
     jasmine.Ajax.withMock(function() {
       $('[data-x="0"][data-y="0"]').click();
       $("#previous").click()
