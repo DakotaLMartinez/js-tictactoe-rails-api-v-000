@@ -32,12 +32,11 @@ function attachListeners(){
   $("#save").on("click", function() {
     if (gameSaved === false) {
       saveGame();
-      gameSaved = true;
     } else {
       updateGame();
     }
   });
-  $("#games").on("click", "li", function(){
+  $("#games").on("click", "div", function(){
     var id = $(this).attr('data-gameid');
     id = Number(id);
     loadGame(id);
@@ -57,6 +56,7 @@ function doTurn(){
     turn = 0;
     resetBoard();
     gameSaved = false;
+    currentGame = 0;
   }
 }
 //////////////////////////////
@@ -165,15 +165,15 @@ function player() {
 function getAllGames() {
   $.get('/games').done(function(data) {
     var games = data["games"];
-    var list = document.createElement('ul');
+    var html = "";
     $.each(games, function(index, value){
-      var item = document.createElement('li');
-      item.innerHTML = value["id"];
-      $(item).attr('data-gameid', value["id"]);
-      $(list).append(item);
+      var item = '<div data-gameid="' + value["id"] + '">';
+        item += value["id"];
+      item += "</div>";
+      html += item;
     });
     if (data["games"].length > 0) {
-      $("#games").html(list); 
+      $("#games").html(html); 
     }
     return games;
   });
@@ -189,18 +189,25 @@ function loadGame(id) {
 }
 
 function saveGame() {
+  console.log("Current Game (before save): " + currentGame);
   var gameState = getState();
+  console.log(gameState);
   var hash = { "game": { "state": gameState } };
   var url = "/games";
   var posting = $.post(url, hash);
   posting.done(function(data){
-    console.log(data);
+    console.log("id: " + data["game"]["id"]);
     currentGame = data["game"]["id"];
+    console.log("Current Game (after save): " + currentGame);
+    console.log("Saved?:" + gameSaved);
+    gameSaved = true;
+
     return data;
   });
 }
 
 function updateGame() {
+  console.log("Current Game (before update): " + currentGame);
   var gameState = getState();
   var hash = { "game": { "id": currentGame, "state": gameState } }; 
   var url = "/games/" + currentGame;
@@ -213,6 +220,7 @@ function updateGame() {
       console.log(data);
     }
   })
+  console.log("Current Game (after update): " + currentGame);
 }
 
 //////////////////////////////////////

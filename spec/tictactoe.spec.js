@@ -275,8 +275,12 @@ describe('#integration tests of persistence', function() {
       }
       $('#save').click()
       jasmine.Ajax.requests.mostRecent().respondWith(response);
+      var request = jasmine.Ajax.requests.mostRecent();
+      console.log(request);
+      
       $('#save').click()
       var request = jasmine.Ajax.requests.mostRecent();
+      console.log(request);
       expect(request.url).toBe('/games/1');
       expect(request.method).toBe('PATCH');
     });
